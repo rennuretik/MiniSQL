@@ -1,0 +1,9 @@
+{
+    "root": "E:\\python\\MiniSQL",
+    "databases": [
+        "default",
+        "truth",
+        "seek"
+    ],
+    "default": "default"
+}
