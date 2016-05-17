@@ -1,9 +1,10 @@
 import json
 import os
 import sys
-import create,globalvs
+import api
+import catalog
 
-create.createDatabase("seek")
+api.createDatabase("test")
 
 '''f=open("config.json","r+")
 js=f.read()
