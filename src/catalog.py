@@ -32,7 +32,7 @@ def readCata(database):
 def updateCata(database,cata):
         cataPath=os.path.join(root,"database/"+database+"/catalog.json")
         f=open(cataPath,"w")
-        cata=json.dumps(cata)
+        cata=json.dumps(cata,indent=4)
         f.write(cata)
         f.close()
     

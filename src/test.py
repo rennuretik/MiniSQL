@@ -3,8 +3,12 @@ import os
 import sys
 import api
 import catalog
+from fileManage import *
 
-api.createDatabase("test")
+api.createTable("test","test",{"a": "char(5)","b": "int"},{"unique":["a","b"]})
+#api.createDatabase("test")
+
+#api.createDatabase("test")
 
 '''f=open("config.json","r+")
 js=f.read()

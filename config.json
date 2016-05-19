@@ -3,6 +3,6 @@
         "test": true,
         "default": true
     },
-    "default": "default",
-    "root": "E:\\python\\MiniSQL"
+    "root": "E:\\python\\MiniSQL",
+    "default": "default"
 }
