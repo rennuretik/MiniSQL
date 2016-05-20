@@ -5,7 +5,7 @@ import api
 import catalog
 from fileManage import *
 
-api.createTable("test","test",{"a": "char(5)","b": "int"},{"unique":["a","b"]})
+api.insertRow("test","test",["abc",35])
 #api.createDatabase("test")
 
 #api.createDatabase("test")

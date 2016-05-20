@@ -1,16 +1,20 @@
 {
     "test": {
-        "scheme": {
-            "b": "int",
-            "a": "char(5)"
-        },
-        "unique": [
-            "a",
-            "b"
+        "scheme": [
+            [
+                "a",
+                "char(5)",
+                "unique"
+            ],
+            [
+                "b",
+                "int",
+                "unique"
+            ]
         ],
-        "length": 0,
-        "index": {},
         "size": 9,
-        "format": "i5s"
+        "index": {},
+        "format": "<5si",
+        "length": 1
     }
 }

@@ -23,3 +23,21 @@ def initTable(database,name,size):#scheme { a: int b: char(n) c:float }
     file=tableFile.BinaryRecordFile(path,size)
     file.close()
 
+def insert(database,table,binarydata,size):#在特定的表当中插入一行，也是暂时没有考虑buffer的问题
+    path=os.path.join(root,"database/"+database+"/"+table+".tb")
+    tb=tableFile.BinaryRecordFile(path,size)
+    tb[len(tb)]=binarydata;
+    tb.close();    
+    
+def readTable(database,table,size,pat):
+    path=os.path.join(root,"database/"+database+"/"+table+".tb")
+    tb=tableFile.BinaryRecordFile(path,size)
+    for row in tb:
+        if row[0]==tableFile._OKAY:#如果记录没有被删除，生成到列表
+            yield toRecord(row[1:])#生成列表，除去首个标志是否被删除的字节
+        elif row[0]==tableFile._DELETED:
+            continue
+        else:
+            raise Exception("数据错误")
+        
+

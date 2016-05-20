@@ -37,7 +37,6 @@ def createTable(database,table,scheme,restrict={}):
     cata[table]["scheme"]=scheme
     cata[table]["length"]=0
     cata[table]["index"]={}
-    cata[table]["unique"]=[]#更新数据库当中关于表各种信息
     cata[table]["format"]=bformat
     cata[table]["size"]=size
 
@@ -59,16 +58,23 @@ def dropIndex(database,index):
 
 def insertRow(database,table,row):#["xia",35]
     try:
-        tableinfo=catalog.readCata(database)["table"]
+        cata=catalog.readCata(database)
+        tableinfo=cata[table]
     except:
         raise Exception("表不存在")
 
-    check.checkFormat(row,list(tableinfo["scheme"].values()))
-    tablecontents=readTable()#这里暂时没有考虑buffer的问题
+    def toscheme(scheme):
+        for item in scheme:
+            yield item[1]
+
+    check.checkFormat(row,list(toscheme(tableinfo["scheme"])))
+    tablecontents=readTable(database,table,tableinfo["size"],tableinfo["format"])#这里暂时没有考虑buffer的问题
     check.checkRestrict(row,tablecontents,tableinfo)
 
-    binaryrow=tobinary(row)#转换成二进制
-    insertRow(database,table,binaryrow)
+    binaryrow=tobinary(row,tableinfo["format"])#转换成二进制
+    insert(database,table,binaryrow,tableinfo["size"])
+    tableinfo["length"]+=1
+    catalog.updateCata(database,cata)
     return "插入了一行"
         
 
