@@ -1,11 +1,11 @@
 debugMode = False
 
 import sys
+import pickle
 
 def debug(s):
     if debugMode:
         print(s)
-
 
 class Node:
 
@@ -236,7 +236,8 @@ class Tree:
 
             debug("  Not root.")
             debug("  Going to try looking for siblings")
-            dist = lambda x: abs(node.parent.children.index(node) - node.parent.children.index(n))
+
+            dist = lambda n: abs(node.parent.children.index(node) - node.parent.children.index(n))
             siblings = [n for n in node.parent.children if dist(n) == 1]
             candidates = [n for n in siblings if len(n.keys) > (self.threshold/2)]
 
@@ -255,7 +256,7 @@ class Tree:
                     swapper = candidate.keys[0]
                     candidate.keys.remove(swapper)
                     node.keys.append(swapper)
-                    debug("  borrowing %s" % swapper)
+                    #debug("  borrowing %s" % swapper)
                     node.parent.keys = [candidate.keys[0]] # this is wrong fix later
                 else:
                     debug("  this is a left-appropriation")
@@ -318,7 +319,10 @@ class Tree:
 
         debug("deleting %s from %s" % (val, node))
 
-        node.keys.remove(val)
+        for index,item in enumerate(node.keys):
+            if item[0]==val:
+                del node.keys[index]
+                break
 
         if len(node.keys) < self.threshold/2:
             # underflow
@@ -333,7 +337,7 @@ class Tree:
         """ Given a tree, prettys it """
 
         def printNode(n, inc=1):
-            print("%s%s (parent = %s)" % (" "*inc, n, n.parent))
+            print("%s%s (parent = %s)" % (str(inc), n, n.parent))
             for c in n.children:
                 printNode(c, inc+1)
 
@@ -379,7 +383,9 @@ class Tree:
         print()
         print ("-end-")
 
-            
+    def tobinary(self):
+        return pickle.dumps(self)
+
 if __name__ == "__main__":
 
     t = Tree()
@@ -400,6 +406,12 @@ if __name__ == "__main__":
         t.pretty()
         t.insert(n)
 
-    print(t.find(4))
-    for p in t.finds(3,5):
+    for p in t.finds(3,6):
         print(p)
+    t.save()
+    t.delete(3)
+    for p in t.finds(3,6):
+        print(p)
+    t.save()
+
+

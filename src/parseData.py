@@ -13,7 +13,7 @@ def parseScheme(scheme):#解析数据表的定义模式，返回供struct模块�
         if item[1]=="int":
             pattern+="i"
         elif item[1]=="float":
-            pattern+="f"
+            pattern+="d"
         else:
             match=re.match(charpat,item[1])
             if match:
@@ -49,12 +49,12 @@ def toRecord(row,pat):#把二进制数据转换成人类可阅读的列表
             a[index]=x.decode("utf8").strip("\x00")#去除掉多余的空字符
     return a
 
-pat="<10si"
+'''pat="<10si"
 text=["夏爽",351]
 binary=tobinary(text,pat)
 print(toRecord(binary,pat)[0])
 
-'''b=tobinary(["夏爽",35,2.5],"<10sif")
+b=tobinary(["夏爽",35,2.5],"<10sif")
 print(len(b))
 c=struct.unpack("<10sif",b)
 print(c)'''

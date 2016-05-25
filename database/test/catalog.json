@@ -1,20 +1,26 @@
 {
     "test": {
+        "unique": [
+            "a",
+            "b"
+        ],
+        "index": {
+            "b": "test"
+        },
+        "size": 18,
+        "length": 7,
         "scheme": [
             [
                 "a",
-                "char(5)",
+                "char(10)",
                 "unique"
             ],
             [
                 "b",
-                "int",
+                "float",
                 "unique"
             ]
         ],
-        "size": 9,
-        "index": {},
-        "format": "<5si",
-        "length": 1
+        "format": "<10sd"
     }
 }

@@ -25,10 +25,10 @@ def checkFormat(row,scheme):#检查一行是不是与scheme相匹配
 def checkRestrict(row,tablecontents,tableinfo):
     if "unique" not in tableinfo:
         return
-    for index,column in enumerate(tableinfo["scheme"].values()):
+    for index,column in enumerate(tableinfo["scheme"]):
         if len(column)==2:
             continue
-        elif column[2]=="unique" or column[1]=="primary":#这里暂时没有考虑索引
+        elif column[2]=="unique" or column[2]=="primary":#这里暂时没有考虑索引
             for record in tablecontents:
                 if row[index]==record[index]:
                     raise Exception("违反唯一性约束")

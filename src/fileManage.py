@@ -1,9 +1,12 @@
 from globalvs import *
+from parseData import *
 import os
 import json
 import shutil
 import struct
 import tableFile
+import bptree
+import pickle
 
 
 def initialDB(name):#初始化一个catalog
@@ -23,21 +26,45 @@ def initTable(database,name,size):#scheme { a: int b: char(n) c:float }
     file=tableFile.BinaryRecordFile(path,size)
     file.close()
 
+def deleteTable(database,table):
+    path=os.path.join(root,"database/"+database+"/"+table)
+    os.remove(path)
+
 def insert(database,table,binarydata,size):#在特定的表当中插入一行，也是暂时没有考虑buffer的问题
     path=os.path.join(root,"database/"+database+"/"+table+".tb")
     tb=tableFile.BinaryRecordFile(path,size)
     tb[len(tb)]=binarydata;
     tb.close();    
+    return len(tb)-1
     
-def readTable(database,table,size,pat):
+def readTable(database,table,size,pat):#读取一个表的信息
     path=os.path.join(root,"database/"+database+"/"+table+".tb")
     tb=tableFile.BinaryRecordFile(path,size)
     for row in tb:
-        if row[0]==tableFile._OKAY:#如果记录没有被删除，生成到列表
-            yield toRecord(row[1:])#生成列表，除去首个标志是否被删除的字节
-        elif row[0]==tableFile._DELETED:
-            continue
-        else:
-            raise Exception("数据错误")
-        
+       yield toRecord(row,pat)
+
+def initIndex(database,name):#初始化索引文件
+    path=os.path.join(root,"database/"+database+"/"+name+".index")
+    open(path,"w")
+
+def deleteIndex(database,index):
+    path=os.path.join(root,"database/"+database+"/"+name+".index")
+    os.remove(path)
+
+def updateIndex(database,name,tree):#更新索引文件
+    path=os.path.join(root,"database/"+database+"/"+name+".index")
+    f=open(path,"w+b")
+    f.write(tree.tobinary())#更新索引文件
+    f.close()
+
+def readIndex(database,name):
+    path=os.path.join(root,"database/"+database+"/"+name+".index")
+    f=open(path,"r+b")
+    tree=pickle.loads(f.read())#把二进制的文本转换为B树
+    return tree
+
+
+
+
+
 
