@@ -164,7 +164,7 @@ class Tree:
             nodeToDescend = 0
 
             for i, k in enumerate(node.keys):
-                if val < k[0]:
+                if type(k[0])(val) < k[0]:
                     break
                 else:
                     nodeToDescend += 1
@@ -198,7 +198,7 @@ class Tree:
                     current=current.children[len(current.keys)]'''
         while current:
             for i in current.keys:
-                if i[0]>=lo and i[0]<=hi:
+                if i[0]>=type(i[0])(lo) and i[0]<=type(i[0])(hi):
                     yield i
             current=current.nextNode
 
@@ -263,7 +263,6 @@ class Tree:
                     swapper = candidate.keys[-1]
                     candidate.keys.remove(swapper)
                     node.keys.insert(0, swapper)
-                    debug("  borrowing %s" % swapper)
                     node.parent.keys = [swapper] # this is wrong fix later
 
             else:

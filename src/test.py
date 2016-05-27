@@ -5,16 +5,23 @@ import api
 import catalog
 from fileManage import *
 
-'''b=readTable("test","test1",14,"<10si")
-print(list(b))'''
+#print(api.deleteRow("test","test","b>5 and b<=6.7"))
+
+b = readTable("test", "test", 18, "<10sd")
+print(list(b))
+btree = readIndex("test", "test0")
+btree.pretty()
 
 
-tree=readIndex("test","test")
-tree.pretty()
+#api.dropIndex("test","test","test")
+#api.dropTable("test","test")
+
+#tree=readIndex("test","test")
+#tree.pretty()
 
 #api.insertRow("test","test1",["f",3])
 
-#api.createIndex("test","test","b","test")
+#api.createIndex("test","test","b","test0")
 
 #api.createTable("test","test",[["a","char(10)","unique"],["b","float","unique"]],{"unique": ["a","b"]})
 #api.createTable("test","test1",[["a","char(10)","unique"],["b","int","unique"]],{"unique": ["a","b"]})

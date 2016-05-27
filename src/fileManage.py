@@ -27,27 +27,35 @@ def initTable(database,name,size):#scheme { a: int b: char(n) c:float }
     file.close()
 
 def deleteTable(database,table):
-    path=os.path.join(root,"database/"+database+"/"+table)
+    path=os.path.join(root,"database/"+database+"/"+table+".tb")
     os.remove(path)
 
 def insert(database,table,binarydata,size):#在特定的表当中插入一行，也是暂时没有考虑buffer的问题
     path=os.path.join(root,"database/"+database+"/"+table+".tb")
     tb=tableFile.BinaryRecordFile(path,size)
     tb[len(tb)]=binarydata;
+    temp=len(tb)-1 
     tb.close();    
-    return len(tb)-1
+    return temp
+
+def delete(database,table,size,positions):#删除文件当中的一行记录
+    path=os.path.join(root,"database/"+database+"/"+table+".tb")
+    tb=tableFile.BinaryRecordFile(path,size)
+    for pos in positions:
+        del tb[pos]
     
 def readTable(database,table,size,pat):#读取一个表的信息
     path=os.path.join(root,"database/"+database+"/"+table+".tb")
     tb=tableFile.BinaryRecordFile(path,size)
     for row in tb:
-       yield toRecord(row,pat)
+        if row:
+            yield toRecord(row, pat)
 
 def initIndex(database,name):#初始化索引文件
     path=os.path.join(root,"database/"+database+"/"+name+".index")
     open(path,"w")
 
-def deleteIndex(database,index):
+def deleteIndex(database,name):
     path=os.path.join(root,"database/"+database+"/"+name+".index")
     os.remove(path)
 

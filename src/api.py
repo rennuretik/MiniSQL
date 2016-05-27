@@ -5,7 +5,7 @@ import check
 import bptree
 
 
-def  findindex(scheme,column):#找到一个table当中的一列所对于的index
+def  findindex(scheme,column):  #找到一个table当中的一列所对于的index
     for index,x in enumerate(scheme, start=0):
         if column==x[0]:
             return index
@@ -55,7 +55,8 @@ def createIndex(database,table,column,name):
         bt.insert((row[i],offset))#插入索引的节点
 
     updateIndex(database,name,bt)   
-    tableinfo["index"][name]=if#记录下索引的名字并且其所对应的列 
+    tableinfo["index"][name]=i#记录下索引的名字并且其所对应的列 
+    tableinfo["inindex"][str(i)]=name
     catalog.updateCata(database,cata)
 
 def createTable(database,table,scheme,restrict={}):
@@ -71,9 +72,13 @@ def createTable(database,table,scheme,restrict={}):
     cata[table]["scheme"]=scheme
     cata[table]["length"]=0
     cata[table]["index"]={}
+    cata[table]["inindex"]={}
     cata[table]["format"]=bformat
     cata[table]["size"]=size
     cata[table]["unique"]=[]
+    cata[table]["column"]=[]
+    for column in scheme:
+        cata[table]["column"].append(column[0])
 
     if "primary" in restrict:
         createIndex(database,table,restrict["primary"],restrict["primary"])#如果有主键，为其创建索引
@@ -92,12 +97,13 @@ def dropTable(database,table):
     except:
         raise Exception("表不存在")
 
+    if "index" in tableinfo:#如果有索引，删除所有的索引
         for index_name in tableinfo["index"]:
             deleteIndex(database,index_name)#删除所有相关的索引
 
-        deleteTable(database,table)
-        del cata[table]
-        catalog.updateCata(database,cata)
+    deleteTable(database,table)
+    del cata[table]
+    catalog.updateCata(database,cata)
 
 def dropIndex(database,table,index):
     try:
@@ -140,14 +146,70 @@ def insertRow(database,table,row):#["xia",35]
             catalog.updateIndex(database,index_name,inde)
 
     return "插入了1行"
-        
 
+def deleteRow(database,table,condition=None):
+    try:
+        cata=catalog.readCata(database)
+        tableinfo=cata[table]
+    except:
+        raise Exception("表不存在")
 
-def deleteRow(database,table,condition):
-    pass
-
-def search(database,table,condition):
-    pass
+    todelete=[]#需要在文件当中删除的信息
+    trees=[]
+    tablecontents=list(readTable(database,table,tableinfo["size"],tableinfo["format"]))
+    funcs=check.toClosure2(database,tablecontents,condition,tableinfo)
     
 
-       
+    def fit(record):
+        print(record)
+        for func in funcs:
+            if not func(record):
+                return False
+        return True
+
+    for inde in tableinfo["index"]:
+        trees.append((readIndex(database,inde),tableinfo["index"][inde],inde))#读取出所有的索引
+
+    for index, record in enumerate(tablecontents, start=0):
+        if fit(record):  # 检查是否满足删除的条件
+            todelete.append(index)
+            for tree in trees:
+                tree[0].delete(record[tree[1]])  # 更新索引树的信息
+
+    for i,tree in enumerate(trees, start=0):
+        updateIndex(database,tree[2],tree[0])
+
+    deleted = 0
+    for x in todelete:
+        del tablecontents[x-deleted]
+        deleted += 1
+
+    delete(database, table, tableinfo["size"], todelete)
+    tableinfo["length"] -= deleted
+    catalog.updateCata(database, cata)
+    print(tablecontents)
+    return "删除了"+str(len(todelete))+"行记录"
+   
+
+def search(database,table,what='*',condition=None):
+    try:
+        cata=catalog.readCata(database)
+        tableinfo=cata[table]
+    except:
+        raise Exception("表不存在")
+
+    if what!='*':
+        for column in what:
+            if column not in tableinfo["column"]:
+                raise Exception("没有这一列")#如果没有要查找的列报出错误
+
+    tablecontents=list(readTable(database,table,tableinfo["size"],tableinfo["format"]))
+    #读取表的信息并且读取表当中的内容
+
+    fitrecords=list(check.fliterRow(database,tablecontents,condition,tableinfo))#筛选
+    print(tablecontents)
+    print(fitrecords)
+    return toFormat(what,fitrecords,tableinfo["scheme"],tableinfo["column"])+"查找到"+str(len(fitrecords))+"行数据"#返回格式化了的数据
+    
+
+    

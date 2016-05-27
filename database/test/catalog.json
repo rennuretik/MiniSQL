@@ -1,14 +1,15 @@
 {
     "test": {
-        "unique": [
+        "format": "<10sd",
+        "length": 3,
+        "size": 18,
+        "column": [
             "a",
             "b"
         ],
-        "index": {
-            "b": "test"
+        "inindex": {
+            "1": "test0"
         },
-        "size": 18,
-        "length": 7,
         "scheme": [
             [
                 "a",
@@ -21,6 +22,12 @@
                 "unique"
             ]
         ],
-        "format": "<10sd"
+        "unique": [
+            "a",
+            "b"
+        ],
+        "index": {
+            "test0": 1
+        }
     }
 }
