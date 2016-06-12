@@ -1,7 +1,9 @@
 {
     "databases": {
         "test": true,
-        "default": true
+        "test1": true,
+        "default": true,
+        "minisql": true
     },
     "root": "E:\\python\\MiniSQL",
     "default": "default"

@@ -1,7 +1,50 @@
 {
-    "tables": [],
-    "index": 
-    {
-        
+    "aa": {
+        "scheme": [
+            [
+                "b",
+                "int",
+                "None"
+            ],
+            [
+                "a",
+                "char(5)",
+                "None"
+            ]
+        ],
+        "column": [
+            "b",
+            "a"
+        ],
+        "index": {},
+        "inindex": {},
+        "size": 9,
+        "unique": [],
+        "length": 0,
+        "format": "<i5s"
+    },
+    "test": {
+        "scheme": [
+            [
+                "a",
+                "int",
+                "None"
+            ],
+            [
+                "b",
+                "char(5)",
+                "None"
+            ]
+        ],
+        "column": [
+            "a",
+            "b"
+        ],
+        "index": {},
+        "inindex": {},
+        "size": 9,
+        "unique": [],
+        "length": 4,
+        "format": "<i5s"
     }
 }

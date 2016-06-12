@@ -5,12 +5,17 @@ import api
 import catalog
 from fileManage import *
 
+
+print(api.search("default","test","*","a<>5",sort="a",isreverse=True))
 #print(api.deleteRow("test","test","b>5 and b<=6.7"))
 
-b = readTable("test", "test", 18, "<10sd")
+'''print(api.search("test","test","*","a<>5"))
+print(api.search("test","test",["a"],"a<>5"))'''
+
+'''b = readTable("test", "test", 18, "<10sd")
 print(list(b))
 btree = readIndex("test", "test0")
-btree.pretty()
+btree.pretty()'''
 
 
 #api.dropIndex("test","test","test")
@@ -19,12 +24,13 @@ btree.pretty()
 #tree=readIndex("test","test")
 #tree.pretty()
 
-#api.insertRow("test","test1",["f",3])
+#api.insertRow("default","test",[1,"ab"])
 
 #api.createIndex("test","test","b","test0")
 
 #api.createTable("test","test",[["a","char(10)","unique"],["b","float","unique"]],{"unique": ["a","b"]})
-#api.createTable("test","test1",[["a","char(10)","unique"],["b","int","unique"]],{"unique": ["a","b"]})
+#api.dropTable("test","test2")
+#api.createTable("test","test2",[["a","char(10)",None],["b","int","unique"]],{"unique": ["b"]})
 
 '''api.insertRow("test","test",["a",4.5])
 api.insertRow("test","test",["b",5.5])

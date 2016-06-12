@@ -57,7 +57,7 @@ def toFormat(what,fitrecords,scheme,columns,sort=False,reverse=False):#把查询
         else:
             for index,x in enumerate(columns, start=0):
                 if x in what:
-                    yield x
+                    yield index
 
     def findpat(scheme,indexes):#找到字符串的输出模式
         charpat=re.compile(r"char\((\d+)\)")

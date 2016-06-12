@@ -1,15 +1,6 @@
 {
     "test": {
-        "format": "<10sd",
         "length": 3,
-        "size": 18,
-        "column": [
-            "a",
-            "b"
-        ],
-        "inindex": {
-            "1": "test0"
-        },
         "scheme": [
             [
                 "a",
@@ -26,8 +17,17 @@
             "a",
             "b"
         ],
+        "inindex": {
+            "1": "test0"
+        },
+        "size": 18,
         "index": {
             "test0": 1
-        }
+        },
+        "format": "<10sd",
+        "column": [
+            "a",
+            "b"
+        ]
     }
 }

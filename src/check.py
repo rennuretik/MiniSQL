@@ -23,8 +23,8 @@ def checkFormat(row,scheme):#检查一行是不是与scheme相匹配
         if not match(x,y):
             raise Exception(errormessage)
 
-def checkRestrict(row,tablecontents,tableinfo):
-    if "unique" not in tableinfo:
+def checkRestrict(row,tablecontents,tableinfo):  # 检查完整性约束
+    if not tableinfo["unique"]:
         return
     for index,column in enumerate(tableinfo["scheme"]):
         if len(column)==2:
@@ -36,13 +36,13 @@ def checkRestrict(row,tablecontents,tableinfo):
         else:
             raise Exception("表模式信息错误")
 
-def  findindex(column,scheme):#找到一个table当中的一列所对于的index
+def  findindex(column,scheme):  # 找到一个table当中的一列所对于的index
     for index,x in enumerate(scheme):
         if column==x:
             return index
     raise Exception("没有找到这样的列")    
 
-def parseCondition(condition):#解析筛选模式
+def parseCondition(condition):  # 解析筛选模式
     pat=re.compile(r"([a-z]+)(<>|<=|>=|<|>|=)(.*)")
     match=re.match(pat,condition)
     if not match:
@@ -53,9 +53,11 @@ def parseCondition(condition):#解析筛选模式
     comparevalue=match.group(3)#进行比较的值
     return columnName,operatorType,comparevalue
 
+print(parseCondition('a>3'))
+
 def toClosure(condition,scheme):#把筛选字符串转换为一个判断的闭包
     if not condition:
-        return lambda x: True
+        return lambda x: True  # 如果是没有condition，那么就是全选
     columnName,operatorType,comparevalue=condition
     i=findindex(condition[0],scheme)
     def greathan(a,b):
@@ -64,7 +66,7 @@ def toClosure(condition,scheme):#把筛选字符串转换为一个判断的闭�
         except:
             raise Exception("比较数据类型错误")
 
-    def greateuqal(a,b):
+    def greatequal(a,b):
         try:
             return a>=type(a)(b)
         except:
@@ -104,30 +106,18 @@ def toClosure(condition,scheme):#把筛选字符串转换为一个判断的闭�
 
     return noName#返回判断函数的闭包
 
-def toClosure2(database,contents,condition,tableinfo):
+
+def toClosure2(condition,tableinfo):
     if not condition:
         return lambda x: True
+
     if condition.find('and')!=-1:
         condition=condition.split("and")
-        print(condition)
-        if len(condition)>2:
-            raise Exception("筛选条件过于复杂")
-        for i in range(2):
-            condition[i]=parseCondition(condition[i].strip()) 
-        if not condition[0][0]==condition[1][0]:
-            raise Exception("筛选条件过于复杂")
-        '''if not ((condition[0][1]=="<" and condition[1][1]==">") or (condition[0][1]==">" and condition[1][1]=="<")) :
-            raise Exception("不支持这样的筛选")#程序只支持在一个范围内的查找'''
-        
-        ind=findindex(condition[1][0],tableinfo["column"])
-        func1=toClosure(condition[0],tableinfo["column"])
-        func2=toClosure(condition[1],tableinfo["column"])#得到两个判断函数
-        return [func1,func2]
-
     else:
-        condition=parseCondition(condition)
-        func=toClosure(condition,tableinfo["column"])
-        return [func]
+        condition=condition.split("or")#只支持单一的and和or
+
+    for x in condition:
+        yield toClosure(parseCondition(x),tableinfo["column"])
 
 def fliterRow(database,contents,condition,tableinfo):#根据条件筛选出符合要求的记录
     if not condition:
