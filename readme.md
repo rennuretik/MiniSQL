@@ -20,12 +20,19 @@ python minisql.py来运行程序
 
 支持的SQL语句不是很标准：
 
-delete * from r1 where a=b2131431 
+delete from r1 where  a>100 
+
 create index index1 on tname  ( 3 )
+
 create table aa (ii char(1),3 int, tet float, primary key ( 3 )) 
-insert into db1 (2,244,'fff','ttt')
-select r1,r3 from r1 where a=b2131431 
+
+insert into db1 values (2,244,'fff','ttt')
+
+select a,b from r1 where a>1.5 and a<2.3 sort by b desc
+
 drop table 1111
+
+import excel-name to table //从excel当中导入
 
 ***
 代码写的惨不忍睹，bug多的数不胜数

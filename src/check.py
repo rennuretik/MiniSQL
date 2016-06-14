@@ -43,6 +43,7 @@ def  findindex(column,scheme):  # 找到一个table当中的一列所对于的in
     raise Exception("没有找到这样的列")    
 
 def parseCondition(condition):  # 解析筛选模式
+    condition=condition.strip()
     pat=re.compile(r"([a-z]+)(<>|<=|>=|<|>|=)(.*)")
     match=re.match(pat,condition)
     if not match:

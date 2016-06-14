@@ -7,6 +7,7 @@ import struct
 import tableFile
 import bptree
 import pickle
+import xlrd
 
 
 def initialDB(name):#初始化一个catalog
@@ -70,6 +71,17 @@ def readIndex(database,name):
     f=open(path,"r+b")
     tree=pickle.loads(f.read())#把二进制的文本转换为B树
     return tree
+
+def readExcel(excel):
+    if not os.path.exists(excel):
+        raise Exception("无法找到"+excel)
+    try:
+        data = xlrd.open_workbook(excel).sheet_by_index(0)
+        for i in range(data.nrows):
+            yield data.row_values(i)
+    except:
+        raise Exception("打开"+excel+"错误")
+
 
 
 

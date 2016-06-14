@@ -51,7 +51,7 @@ def toRecord(row,pat):#把二进制数据转换成人类可阅读的列表
 
 def toFormat(what,fitrecords,scheme,columns,sort=False,reverse=False):#把查询的结果格式化返回
     def findwhat(what,columns):#找到输出的的index
-        if what=="*":
+        if what==["*"]:
             for x in range(len(columns)):
                 yield x
         else:

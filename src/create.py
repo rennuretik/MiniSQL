@@ -1,4 +1,5 @@
 import re
+import collections
 
 
 def createParser(SQL):
@@ -10,16 +11,15 @@ def createParser(SQL):
             return lst
         else:raise Exception("数据库命名错误")
 
-    # create table xxx
+    # create table xxx (a, int, b char(5), primary key ( a ))
     if (lst[1] == "table") :
         if len(lst)<=3: 
             raise Exception("表名信息缺少")
-
-     # create table xxx (a, int, b char(5), primary key ( a )),
         pattern_type = {"int","float"}
         dic_constraint = {}
-        dic_col_name = {}
-        k = "~"#初始化k，用于记录primary key出现的位置
+        unique_constraint=[]
+        dic_col_name = collections.OrderedDict()
+        k = "~" #初始化k，用于记录primary key出现的位置
 
         if (re.match("\(" , lst[3])==None) or (SQL[-1]!=")"): raise Exception("括号错误")#这个句法必须要有括号
         str = (SQL.split("(",1)[1]).strip()#获取 "create table"之后括号中的内容 "(.......)"
@@ -35,7 +35,10 @@ def createParser(SQL):
                 continue
         if (k!="~"):lst1.remove(lst1[k])#将primary key (xxx)移除，剩下是都是属性定义部分，若没有定义，k="~"，不执行该句
         for i in range(0,len(lst1)):#剩下的属性定义部分，应符合字典的套路一一对应
-            if len(lst1[i].split())!=2: raise Exception("表属性定义格式错误")#三个词组成的都记错误
+            if len(lst1[i].split())!=2:
+                if (len(lst1[i].split())==3 and lst1[i].split()[2]!='unique'): raise Exception("表属性定义格式错误")#除了二个词组成的和三个词且最后是unique的都记错误
+                else:unique_constraint.append(lst1[i].split()[0])
+
             lst2 = lst1[i].split()#拆分
             # for j in range(0,2):
             #     lst2[j] = "\""+lst2[j]+"\""
@@ -45,7 +48,7 @@ def createParser(SQL):
             if (lst2[0] not in dic_constraint) : dic_constraint[lst2[0]] = "None"#补全非主键的信息
         for item in dic_constraint:
             if item not in dic_col_name:raise Exception("主键不是属性名")#若主键名不存在column中，报错
-        lst = ["create table", lst[2],dic_col_name,dic_constraint]
+        lst = ["create table", lst[2],dic_col_name,dic_constraint,unique_constraint]
         return lst
 
     # create index xxx
@@ -63,4 +66,5 @@ def createParser(SQL):
 
     else: raise Exception("未知"+lst[1]+"指令")
 
-
+if __name__=="__main__":
+    print(createParser('create table xxx (a int, b char(5) unique, primary key ( a ))'))

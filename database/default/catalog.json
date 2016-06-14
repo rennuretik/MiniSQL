@@ -12,16 +12,16 @@
                 "None"
             ]
         ],
+        "unique": [],
         "column": [
             "b",
             "a"
         ],
         "index": {},
-        "inindex": {},
+        "format": "<i5s",
         "size": 9,
-        "unique": [],
-        "length": 0,
-        "format": "<i5s"
+        "inindex": {},
+        "length": 0
     },
     "test": {
         "scheme": [
@@ -36,15 +36,39 @@
                 "None"
             ]
         ],
+        "unique": [],
         "column": [
             "a",
             "b"
         ],
         "index": {},
-        "inindex": {},
+        "format": "<i5s",
         "size": 9,
+        "inindex": {},
+        "length": 4
+    },
+    "test2": {
+        "scheme": [
+            [
+                "a",
+                "float",
+                "unique"
+            ],
+            [
+                "b",
+                "char(10)",
+                "None"
+            ]
+        ],
         "unique": [],
-        "length": 4,
-        "format": "<i5s"
+        "column": [
+            "a",
+            "b"
+        ],
+        "index": {},
+        "format": "<d10s",
+        "size": 18,
+        "inindex": {},
+        "length": 20
     }
 }

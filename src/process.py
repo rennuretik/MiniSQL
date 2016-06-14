@@ -24,6 +24,10 @@ def process(SQL):
     elif SQL1[0] == '\d':
         lst = SQL1
         lst[0] = "changeDB"
+    elif SQL1[0]=="import":
+        if len(SQL1[1])!=4 and SQL1[2]!='to':
+            raise Exception("SQL语句错误")
+        return [SQL1[0],SQL1[1],SQL1[3]]  # [import excel-file-name table]
     else:
         raise Exception("未知操作指令")
     return lst

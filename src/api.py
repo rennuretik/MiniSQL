@@ -21,6 +21,7 @@ def createDatabase(name):
         initialDB(name)#初始化文件
         config["databases"][name]=True
         catalog.updateConfig(config)#更新全局配置
+        DBs.append(name)
     return "database created"
 
 
@@ -32,6 +33,7 @@ def deleteDatabase(name):
         deleteDB(name)
         del config["databases"][name]
         catalog.updateConfig(config)
+        DBs.remove(name)
     return "database deleted"
 
 
@@ -166,8 +168,8 @@ def insertRow(database,table,row):#["xia",35]
     if tableinfo["index"]:#如果有索引,要更新索引
         for index_name in tableinfo["index"]:
             inde=readIndex(database,index_name)
-            inde.insert((row[i],position))
-            catalog.updateIndex(database,index_name,inde)
+            inde.insert((row[tableinfo["index"][index_name]],position))
+            updateIndex(database,index_name,inde)
 
     return "1 row inserted"
 
@@ -211,8 +213,7 @@ def deleteRow(database,table,condition=None):
     delete(database, table, tableinfo["size"], todelete)
     tableinfo["length"] -= deleted
     catalog.updateCata(database, cata)
-    print(tablecontents)
-    return str(len(todelete))+"rows deleted"
+    return str(len(todelete))+" rows deleted"
    
 
 def search(database,table,what='*',condition=None,sort=None,isreverse=False):
@@ -222,7 +223,7 @@ def search(database,table,what='*',condition=None,sort=None,isreverse=False):
     except:
         raise Exception("表不存在")
 
-    if what!='*':
+    if what!=['*']:
         for column in what:
             if column not in tableinfo["column"]:
                 raise Exception("没有这一列")#如果没有要查找的列报出错误
@@ -248,5 +249,11 @@ def search(database,table,what='*',condition=None,sort=None,isreverse=False):
 
     return toFormat(what, fitrecords, tableinfo["scheme"], tableinfo["column"])+str(len(fitrecords))+" row selected"
      #  返回格式化了的数据
+
+def importExcel(database,excel,table):  #从excel当中导入
+    records=list(readExcel(excel));
+    for record in records:
+        insertRow(database,table,record)
+    return str(len(records))+" rows inserted"
     
 

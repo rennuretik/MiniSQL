@@ -1,31 +1,40 @@
-import re
-
 def selectParser(SQL):
-    lst = SQL.strip().split()
+    lst=SQL.split()
+    if lst[2]!="from":
+        raise Exception("SQL语句错误")
+    if "where" not in lst:
+        if "sort" not in lst:
+            if len(lst)!=4:
+                raise Exception("SQL语句错误")
+            return [lst[0], lst[1].split(','), lst[3], None, None, False]
+        j=lst.index("sort")
+        if len(lst)<j+3 or lst[j+1]!= "by":
+            raise Exception("SQL语句错误")
+        if lst[-1] != "desc":
+            return [lst[0], lst[1].split(','), lst[3], None, lst[j+2] , False]
+        return [lst[0], lst[1].split(','), lst[3], None, lst[j+2] , True]
+    if lst.index("where")!=4:
+        raise Exception("SQL语句错误")
+    if "sort" not in lst:
+        return [lst[0], lst[1].split(','), lst[3], ' '.join(lst[5:]), None, False]
+    i=lst.index("sort")
+    if len(lst)<i+3 or lst[i+1]!= "by":
+        raise Exception("SQL语句错误")
+    if lst[-1] != "desc":
+        return [lst[0], lst[1].split(','), lst[3], ' '.join(lst[5:i]),lst[i+2] , False]
+    return [lst[0], lst[1].split(','), lst[3], ' '.join(lst[5:i]),lst[i+2] , True]
 
-    if len(lst)==4 and lst[1] == "*" and lst[2]=="from":
-        return ["select",lst[3],'*',None]
+if __name__=="__main__":
+    print(selectParser('select * from test'))
+    print(selectParser('select a,b from test where a>5 and b<7'))
+    print(selectParser('select a,b from test where a>5 and b<7 sort by a'))
+    print(selectParser('select a,b from test where a<4 sort by b desc'))
 
-    if len(lst)==4 and lst[1] != "*" and lst[2]=="from":
-        lst2 = lst[1].split(",")
-        for i in range(0,len(lst2)):
-            lst2[i] = lst2[i].strip()
-            if lst2[i] == "": raise Exception("属性格式错误")
-        lst1=["select",lst[3],lst2,None]
-        return lst1
+    '''select * from test'''
+    '''select a,b from test where a>5 and b<7'''
+    '''select a,b from test where a>5 and b<7 sort by a'''
+    '''select a,b from test where a<4 sort by b desc'''  #
 
-    if len(lst)==6 and lst[1] == "*" and lst[2]=="from" and lst[4] == "where":
-        lst1 = SQL.split("where")[1].strip()
-        lst1 = ["select", lst[3], "*", lst1]
-        return lst1
 
-    if len(lst)==6 and lst[1]!="*" and lst[2] == "from" and lst[4]== "where":
-        lst1 = SQL.split("where")[1].strip()
-        lst2 = lst[1].split(",")
-        for i in range(0,len(lst2)):
-            lst2[i] = lst2[i].strip()
-            if lst2[i] == "": raise Exception("属性格式错误")
-        lst1=["select",lst[3],lst2,lst1]
-        return lst1
-    else:
-        raise Exception("句式错误")
+
+

@@ -83,7 +83,10 @@ def foo9(args):
 def createtable(args):
     scheme=[]
     for x in args[2]:
-        scheme.append([x, args[2][x], args[3][x]])
+        if x in args[4]:
+            scheme.append([x, args[2][x], "unique"])
+        else:
+            scheme.append([x, args[2][x], args[3][x]])
     restrict={
         "unique" : [],
         "primary" : None
@@ -95,7 +98,7 @@ def createtable(args):
             restrict["primary"]=y;
     return createTable(currentDB,args[1],scheme,restrict)
     
-    #['create table', 'aa', {'tet': 'float', '3': 'int', 'ii': 'char(1)'}, {'tet': 'None', '3': 'primary key', 'ii': 'None'}]
+    #['create table', 'xxx', {'a': 'int', 'b': 'char(5)'}, {'a': 'primary key', 'b': 'None'}, ['b']]
     #api.createTable("test","test",[["a","char(10)","unique"],["b","float","unique"]],{"unique": ["a","b"]})
 
 functions = {
@@ -108,7 +111,8 @@ functions = {
     "drop index":  lambda args: dropIndex(currentDB,args[2],args[1]),
     "insert": lambda args: insertRow(currentDB,args[1],args[2]),
     "delete": lambda args: deleteRow(currentDB,args[1],args[2]),
-    "select": lambda args: search(currentDB,args[1],args[2],args[3])
+    "select": lambda args: search(currentDB,args[2], args[1],args[3],args[4],args[5]),
+    "import": lambda args: importExcel(currentDB,args[1],args[2])
 }
 
 
@@ -128,12 +132,11 @@ if __name__ == "__main__":
         elif command == "\\t":
             showtables()
         else:
-            try:
-                operation = process(command)
-                backInfo = functions[operation[0]](operation)
-                print(backInfo)
-            except Exception as e:
-                print(e)
+            operation = process(command)
+            print(operation)
+            backInfo = functions[operation[0]](operation)
+            print(backInfo)
+            '''except Exception as e:print(e)'''
 
 
 

@@ -6,7 +6,7 @@ import catalog
 from fileManage import *
 
 
-print(api.search("default","test","*","a<>5",sort="a",isreverse=True))
+print(api.search("default","test",['*'],"a<>5",sort="a",isreverse=True))
 #print(api.deleteRow("test","test","b>5 and b<=6.7"))
 
 '''print(api.search("test","test","*","a<>5"))
@@ -32,8 +32,8 @@ btree.pretty()'''
 #api.dropTable("test","test2")
 #api.createTable("test","test2",[["a","char(10)",None],["b","int","unique"]],{"unique": ["b"]})
 
-'''api.insertRow("test","test",["a",4.5])
-api.insertRow("test","test",["b",5.5])
+#api.insertRow("test","test",["dedefd",18.5])
+'''api.insertRow("test","test",["b",5.5])
 api.insertRow("test","test",["c",6.5])
 api.insertRow("test","test",["d",6.6])
 api.insertRow("test","test",["e",6.7])

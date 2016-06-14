@@ -1,6 +1,18 @@
 {
     "test": {
-        "length": 3,
+        "format": "<10sd",
+        "size": 18,
+        "index": {
+            "test0": 1
+        },
+        "length": 8,
+        "column": [
+            "a",
+            "b"
+        ],
+        "inindex": {
+            "1": "test0"
+        },
         "scheme": [
             [
                 "a",
@@ -14,18 +26,6 @@
             ]
         ],
         "unique": [
-            "a",
-            "b"
-        ],
-        "inindex": {
-            "1": "test0"
-        },
-        "size": 18,
-        "index": {
-            "test0": 1
-        },
-        "format": "<10sd",
-        "column": [
             "a",
             "b"
         ]

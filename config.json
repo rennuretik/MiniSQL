@@ -1,10 +1,10 @@
 {
-    "databases": {
-        "test": true,
-        "test1": true,
-        "default": true,
-        "minisql": true
-    },
+    "default": "default",
     "root": "E:\\python\\MiniSQL",
-    "default": "default"
+    "databases": {
+        "default": true,
+        "test": true,
+        "minisql": true,
+        "test1": true
+    }
 }
